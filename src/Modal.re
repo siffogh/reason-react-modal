@@ -1,13 +1,16 @@
 [%bs.raw {|require('./Modal.css')|}];
 
 [@bs.scope "document"] [@bs.val] external body: Dom.element = "body";
+[@bs.scope "document"] [@bs.val]
+external addKeyDownListener: (string, ReactEvent.Keyboard.t => unit) => unit =
+  "addEventListener";
 
 module Cross = {
   [@bs.module "./cross.svg"] [@react.component]
   external make: unit => React.element = "default";
 };
 
-type modalContextType = ReactEvent.Mouse.t => unit;
+type modalContextType = unit => unit;
 
 let modalContext = React.createContext(_ => ());
 
@@ -32,6 +35,17 @@ module ContextProvider = {
 
 [@react.component]
 let make = (~children, ~onModalClose) => {
+  let effect = () => {
+    addKeyDownListener("keydown", e =>
+      if (ReactEvent.Keyboard.keyCode(e) === 27) {
+        onModalClose();
+      }
+    );
+    None;
+  };
+
+  React.useEffect(effect);
+
   ReactDOMRe.createPortal(
     <div className="modal-container" role="dialog" ariaModal=true>
       <div className="modal-content">
@@ -49,7 +63,10 @@ module Header = {
 
     <div className="modal-header">
       children
-      <button className="cross-btn" title="close modal" onClick=onModalClose>
+      <button
+        className="cross-btn"
+        title="close modal"
+        onClick={_ => onModalClose()}>
         <Cross />
       </button>
     </div>;
@@ -72,7 +89,10 @@ module Footer = {
     let make = (~children=React.null) => {
       let onModalClose = React.useContext(modalContext);
 
-      <button className="close-btn" title="close modal" onClick=onModalClose>
+      <button
+        className="close-btn"
+        title="close modal"
+        onClick={_ => onModalClose()}>
         children
       </button>;
     };

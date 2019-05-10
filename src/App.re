@@ -12,7 +12,7 @@ let make = () => {
     </button>
     {!isModalVisible
        ? ReasonReact.null
-       : <Modal onModalClose={_ => setIsModalVisible(_ => false)}>
+       : <Modal onModalClose={() => setIsModalVisible(_ => false)}>
            <Modal.Header> {"Header" |> ReasonReact.string} </Modal.Header>
            <Modal.Body> {"Body" |> ReasonReact.string} </Modal.Body>
            <Modal.Footer>
