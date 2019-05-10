@@ -11,6 +11,15 @@ let make = () => {
       {"open modal" |> ReasonReact.string}
     </button>
     {!isModalVisible
-       ? ReasonReact.null : <Modal> {"Foo" |> ReasonReact.string} </Modal>}
+       ? ReasonReact.null
+       : <Modal>
+           <Modal.Header> {"Header" |> ReasonReact.string} </Modal.Header>
+           <Modal.Body> {"Body" |> ReasonReact.string} </Modal.Body>
+           <Modal.Footer>
+             <Modal.Footer.CloseBtn>
+               {"Close" |> ReasonReact.string}
+             </Modal.Footer.CloseBtn>
+           </Modal.Footer>
+         </Modal>}
   </div>;
 };
